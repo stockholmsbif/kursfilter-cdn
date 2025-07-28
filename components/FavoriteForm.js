@@ -1,5 +1,7 @@
-export function FavoriteForm({ favorites, contactInfo, onChange }) {
+export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
   const e = React.createElement;
+
+  const isValid = contactInfo.name.trim() && contactInfo.email.trim();
 
   return e('div', {
     style: {
@@ -34,6 +36,21 @@ export function FavoriteForm({ favorites, contactInfo, onChange }) {
       value: contactInfo.phone,
       onChange: (ev) => onChange({ ...contactInfo, phone: ev.target.value }),
       style: { margin: '0.5rem 0', padding: '0.5rem', width: '100%' }
-    })
+    }),
+
+    e('button', {
+      disabled: !isValid,
+      onClick: () => isValid && onSubmit && onSubmit(),
+      style: {
+        marginTop: '1rem',
+        padding: '0.5rem 1rem',
+        backgroundColor: isValid ? '#4A90E2' : '#ccc',
+        color: '#fff',
+        border: 'none',
+        borderRadius: '6px',
+        fontSize: '1rem',
+        cursor: isValid ? 'pointer' : 'not-allowed'
+      }
+    }, 'Skicka intresse')
   );
 }
