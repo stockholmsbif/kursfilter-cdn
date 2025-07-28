@@ -116,7 +116,6 @@ function MultiSelectFilter({ title, options, selected, onChange }) {
           key: opt,
           className: 'multiselect-option' + (selected.includes(opt) ? ' selected' : ''),
           onClick: () => toggle(opt),
-          style: { backgroundColor: '#fff', color: '#333' }
         }, opt)
       ),
       e('button', {
