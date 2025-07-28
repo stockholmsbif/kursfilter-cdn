@@ -13,6 +13,7 @@ export function renderCourseBrowser({ React, ReactDOM }) {
     const [ageGroupFilter, setAgeGroupFilter] = React.useState([]);
     const [searchQuery, setSearchQuery] = React.useState('');
     const [favorites, setFavorites] = React.useState([]);
+    const [contactInfo, setContactInfo] = React.useState({ name: '', email: '', phone: '' });
 
     React.useEffect(() => {
       fetch(COURSE_API_URL)
@@ -34,6 +35,10 @@ export function renderCourseBrowser({ React, ReactDOM }) {
           ? prev.filter(id => id !== courseId)
           : [...prev, courseId]
       );
+    };
+
+    const handleInputChange = (field) => (ev) => {
+      setContactInfo({ ...contactInfo, [field]: ev.target.value });
     };
 
     if (loading) return e('p', null, 'Laddar...');
@@ -115,6 +120,39 @@ export function renderCourseBrowser({ React, ReactDOM }) {
         selected: ageGroupFilter,
         onChange: setAgeGroupFilter
       }),
+
+      favorites.length > 0 && e('div', {
+        style: {
+          marginTop: '2rem',
+          padding: '1rem',
+          background: '#f5f5f5',
+          borderRadius: '8px',
+          maxWidth: '600px'
+        }
+      },
+        e('h3', null, `Du har valt ${favorites.length} kurs${favorites.length > 1 ? 'er' : ''}`),
+        e('input', {
+          type: 'text',
+          placeholder: 'Ditt namn',
+          value: contactInfo.name,
+          onChange: handleInputChange('name'),
+          style: { margin: '0.5rem 0', padding: '0.5rem', width: '100%' }
+        }),
+        e('input', {
+          type: 'email',
+          placeholder: 'Din e-postadress',
+          value: contactInfo.email,
+          onChange: handleInputChange('email'),
+          style: { margin: '0.5rem 0', padding: '0.5rem', width: '100%' }
+        }),
+        e('input', {
+          type: 'tel',
+          placeholder: 'Telefonnummer (valfritt)',
+          value: contactInfo.phone,
+          onChange: handleInputChange('phone'),
+          style: { margin: '0.5rem 0', padding: '0.5rem', width: '100%' }
+        })
+      ),
 
       e('h2', null, 'Tillgängliga kurser'),
       filtered.map(course =>
