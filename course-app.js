@@ -11,6 +11,7 @@ export function renderCourseBrowser({ React, ReactDOM }) {
     const [weekdayFilter, setWeekdayFilter] = React.useState([]);
     const [municipalityFilter, setMunicipalityFilter] = React.useState([]);
     const [ageGroupFilter, setAgeGroupFilter] = React.useState([]);
+    const [searchQuery, setSearchQuery] = React.useState('');
 
     React.useEffect(() => {
       fetch(COURSE_API_URL)
@@ -30,7 +31,6 @@ export function renderCourseBrowser({ React, ReactDOM }) {
 
     const currentYear = new Date().getFullYear();
 
-    // Dynamiska filter baserat på data
     const municipalities = Array.from(new Set(courses.map(c => c.municipality).filter(Boolean))).sort();
 
     const weekdays = Array.from(new Set(courses.map(c => c.weekday?.toLowerCase()).filter(Boolean)))
@@ -57,9 +57,34 @@ export function renderCourseBrowser({ React, ReactDOM }) {
         return ageGroupFilter.includes(ageLabel);
       });
     }
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      filtered = filtered.filter(course =>
+        (course.course_name || '').toLowerCase().includes(q) ||
+        (course.description || '').toLowerCase().includes(q) ||
+        (course.location_name || '').toLowerCase().includes(q) ||
+        (course.org_name || '').toLowerCase().includes(q)
+      );
+    }
 
     return e('div', null,
       e('h2', null, 'Filtrera kurser'),
+
+      e('input', {
+        type: 'text',
+        placeholder: 'Sök t.ex. bamsegympa, hall eller arrangör',
+        value: searchQuery,
+        onChange: (ev) => setSearchQuery(ev.target.value),
+        style: {
+          padding: '0.5rem',
+          fontSize: '1rem',
+          marginBottom: '1rem',
+          width: '100%',
+          maxWidth: '500px',
+          border: '1px solid #ccc',
+          borderRadius: '8px'
+        }
+      }),
 
       e(MultiSelectFilter, {
         title: 'Veckodag',
@@ -116,6 +141,7 @@ function MultiSelectFilter({ title, options, selected, onChange }) {
           key: opt,
           className: 'multiselect-option' + (selected.includes(opt) ? ' selected' : ''),
           onClick: () => toggle(opt),
+          style: { backgroundColor: '#fff', color: '#333' }
         }, opt)
       ),
       e('button', {
