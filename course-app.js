@@ -12,6 +12,7 @@ export function renderCourseBrowser({ React, ReactDOM }) {
     const [municipalityFilter, setMunicipalityFilter] = React.useState([]);
     const [ageGroupFilter, setAgeGroupFilter] = React.useState([]);
     const [searchQuery, setSearchQuery] = React.useState('');
+    const [favorites, setFavorites] = React.useState([]);
 
     React.useEffect(() => {
       fetch(COURSE_API_URL)
@@ -26,6 +27,14 @@ export function renderCourseBrowser({ React, ReactDOM }) {
           setLoading(false);
         });
     }, []);
+
+    const toggleFavorite = (courseId) => {
+      setFavorites(prev =>
+        prev.includes(courseId)
+          ? prev.filter(id => id !== courseId)
+          : [...prev, courseId]
+      );
+    };
 
     if (loading) return e('p', null, 'Laddar...');
 
@@ -109,7 +118,22 @@ export function renderCourseBrowser({ React, ReactDOM }) {
 
       e('h2', null, 'Tillgängliga kurser'),
       filtered.map(course =>
-        e(CourseCard, { key: course.course_id, course })
+        e('div', { style: { position: 'relative' } },
+          e('span', {
+            onClick: () => toggleFavorite(course.course_id),
+            style: {
+              position: 'absolute',
+              top: '0',
+              right: '0',
+              cursor: 'pointer',
+              fontSize: '1.5rem',
+              color: favorites.includes(course.course_id) ? '#d40000' : '#ccc',
+              padding: '0.5rem'
+            },
+            title: favorites.includes(course.course_id) ? 'Ta bort favorit' : 'Markera som favorit'
+          }, favorites.includes(course.course_id) ? '❤' : '♡'),
+          e(CourseCard, { key: course.course_id, course })
+        )
       )
     );
   }
