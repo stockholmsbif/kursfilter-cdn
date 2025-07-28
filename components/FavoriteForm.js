@@ -4,6 +4,30 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
   const isValid = contactInfo.name.trim() && contactInfo.email.trim();
   const maxLength = 300;
 
+  const handleClick = () => {
+    if (!isValid || !onSubmit) return;
+    onSubmit();
+
+    // Gruppér valda kurser per arrangör
+    const grouped = {};
+    favorites.forEach(course => {
+      const orgEmail = course.org_email || 'okänt';
+      if (!grouped[orgEmail]) grouped[orgEmail] = [];
+      grouped[orgEmail].push(course);
+    });
+
+    Object.entries(grouped).forEach(([email, courseList]) => {
+      console.log(`\n--- Meddelande till: ${email} ---`);
+      console.log(`Kontaktperson: ${contactInfo.name} <${contactInfo.email}>`);
+      if (contactInfo.phone) console.log(`Telefon: ${contactInfo.phone}`);
+      if (contactInfo.message) console.log(`Meddelande: ${contactInfo.message}`);
+      console.log('Valda kurser:');
+      courseList.forEach(c => {
+        console.log(`- ${c.course_name} (${c.location_name})`);
+      });
+    });
+  };
+
   return e('div', {
     style: {
       marginTop: '2rem',
@@ -54,7 +78,7 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
 
     e('button', {
       disabled: !isValid,
-      onClick: () => isValid && onSubmit && onSubmit(),
+      onClick: handleClick,
       style: {
         marginTop: '1rem',
         padding: '0.5rem 1rem',
