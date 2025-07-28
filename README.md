@@ -17,3 +17,4 @@ Detta repo innehåller en JSON-export av kursdata för barngymnastik.nu, generer
 ## Användning
 
 - JSON laddas som statisk fil från GitHub Pages:
+- Används av ett WordPress-plugin som visar kurser i frontend via React.
