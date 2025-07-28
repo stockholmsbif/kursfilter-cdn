@@ -13,7 +13,7 @@ export function renderCourseBrowser({ React, ReactDOM }) {
     const [municipalityFilter, setMunicipalityFilter] = React.useState([]);
     const [ageGroupFilter, setAgeGroupFilter] = React.useState([]);
 
-    const weekdays = ['måndag', 'tisdag', 'onsdag', 'ttttorsdag', 'fredag', 'lördag', 'söndag'];
+    const weekdays = ['måndag', 'tisdag', 'onsdag', 'torsdag', 'fredag', 'lördag', 'söndag'];
 
     React.useEffect(() => {
       fetch(COURSE_API_URL)
