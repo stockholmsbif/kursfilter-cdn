@@ -1,3 +1,4 @@
+//Detta syns endast i Github
 import { COURSE_API_URL } from './config.js';
 import { CourseCard } from './components/CourseCard.js';
 
