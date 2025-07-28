@@ -1,4 +1,3 @@
-//Detta syns endast i Github
 import { COURSE_API_URL } from './config.js';
 import { CourseCard } from './components/CourseCard.js';
 
@@ -12,8 +11,6 @@ export function renderCourseBrowser({ React, ReactDOM }) {
     const [weekdayFilter, setWeekdayFilter] = React.useState([]);
     const [municipalityFilter, setMunicipalityFilter] = React.useState([]);
     const [ageGroupFilter, setAgeGroupFilter] = React.useState([]);
-
-    const weekdays = ['måndag', 'tisdag', 'onsdag', 'torsdag', 'fredag', 'lördag', 'söndag'];
 
     React.useEffect(() => {
       fetch(COURSE_API_URL)
@@ -31,11 +28,14 @@ export function renderCourseBrowser({ React, ReactDOM }) {
 
     if (loading) return e('p', null, 'Laddar...');
 
-    // Dynamiska kommuner från datan
+    const currentYear = new Date().getFullYear();
+
+    // Dynamiska filter baserat på data
     const municipalities = Array.from(new Set(courses.map(c => c.municipality).filter(Boolean))).sort();
 
-    // Dynamiska åldersgrupper baserat på birth_year_from/to
-    const currentYear = new Date().getFullYear();
+    const weekdays = Array.from(new Set(courses.map(c => c.weekday?.toLowerCase()).filter(Boolean)))
+      .sort((a, b) => ['måndag','tisdag','onsdag','torsdag','fredag','lördag','söndag'].indexOf(a) - ['måndag','tisdag','onsdag','torsdag','fredag','lördag','söndag'].indexOf(b));
+
     const ageGroups = Array.from(new Set(
       courses.map(c => {
         const from = currentYear - c.birth_year_to;
@@ -115,7 +115,8 @@ function MultiSelectFilter({ title, options, selected, onChange }) {
         e('div', {
           key: opt,
           className: 'multiselect-option' + (selected.includes(opt) ? ' selected' : ''),
-          onClick: () => toggle(opt)
+          onClick: () => toggle(opt),
+          style: { backgroundColor: '#fff', color: '#333' }
         }, opt)
       ),
       e('button', {
