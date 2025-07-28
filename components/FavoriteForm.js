@@ -2,6 +2,7 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
   const e = React.createElement;
 
   const isValid = contactInfo.name.trim() && contactInfo.email.trim();
+  const maxLength = 300;
 
   return e('div', {
     style: {
@@ -37,6 +38,19 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
       onChange: (ev) => onChange({ ...contactInfo, phone: ev.target.value }),
       style: { margin: '0.5rem 0', padding: '0.5rem', width: '100%' }
     }),
+
+    e('textarea', {
+      placeholder: 'Meddelande till arrangörer (valfritt)',
+      maxLength,
+      value: contactInfo.message || '',
+      onChange: (ev) => onChange({ ...contactInfo, message: ev.target.value }),
+      rows: 4,
+      style: { margin: '0.5rem 0', padding: '0.5rem', width: '100%', resize: 'vertical' }
+    }),
+
+    e('div', {
+      style: { fontSize: '0.85rem', textAlign: 'right', color: '#666' }
+    }, `${(contactInfo.message || '').length} / ${maxLength}`),
 
     e('button', {
       disabled: !isValid,
