@@ -12,7 +12,7 @@ export function CourseBrowserApp() {
   const [ageGroupFilter, setAgeGroupFilter] = React.useState([]);
   const [searchQuery, setSearchQuery] = React.useState('');
   const [favorites, setFavorites] = React.useState([]);
-  const [contactInfo, setContactInfo] = React.useState({ name: '', email: '', phone: '' });
+  const [contactInfo, setContactInfo] = React.useState({ name: '', email: '', phone: '', message: '' });
 
   React.useEffect(() => {
     fetch(COURSE_API_URL)
@@ -34,6 +34,13 @@ export function CourseBrowserApp() {
         ? prev.filter(id => id !== courseId)
         : [...prev, courseId]
     );
+  };
+
+  const handleSubmit = () => {
+    console.log('📨 Formulär skickat med:', {
+      contactInfo,
+      selectedCourses: courses.filter(c => favorites.includes(c.course_id))
+    });
   };
 
   const currentYear = new Date().getFullYear();
@@ -117,9 +124,10 @@ export function CourseBrowserApp() {
     }),
 
     favorites.length > 0 && e(FavoriteForm, {
-      favorites,
+      favorites: courses.filter(c => favorites.includes(c.course_id)),
       contactInfo,
-      onChange: setContactInfo
+      onChange: setContactInfo,
+      onSubmit: handleSubmit
     }),
 
     e('h2', null, 'Tillgängliga kurser'),
