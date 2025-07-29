@@ -1,3 +1,5 @@
+import { CONTACT_API_URL, CONTACT_API_TOKEN } from '../config.js';
+
 export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
   const e = React.createElement;
 
@@ -6,26 +8,29 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
 
   const handleClick = () => {
     if (!isValid || !onSubmit) return;
-    onSubmit();
 
-    // Gruppér valda kurser per arrangör
-    const grouped = {};
-    favorites.forEach(course => {
-      const orgEmail = course.org_email || 'okänt';
-      if (!grouped[orgEmail]) grouped[orgEmail] = [];
-      grouped[orgEmail].push(course);
-    });
+    const payload = {
+      contactInfo,
+      favorites,
+      token: CONTACT_API_TOKEN
+    };
 
-    Object.entries(grouped).forEach(([email, courseList]) => {
-      console.log(`\n--- Meddelande till: ${email} ---`);
-      console.log(`Kontaktperson: ${contactInfo.name} <${contactInfo.email}>`);
-      if (contactInfo.phone) console.log(`Telefon: ${contactInfo.phone}`);
-      if (contactInfo.message) console.log(`Meddelande: ${contactInfo.message}`);
-      console.log('Valda kurser:');
-      courseList.forEach(c => {
-        console.log(`- ${c.course_name} (${c.location_name})`);
+    fetch(CONTACT_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+      .then(res => res.text())
+      .then(resText => {
+        console.log('Svar från servern:', resText);
+        alert('Ditt intresse har skickats till arrangörerna!');
+      })
+      .catch(err => {
+        console.error('Fel vid skick:', err);
+        alert('Något gick fel. Försök igen senare.');
       });
-    });
+
+    onSubmit();
   };
 
   return e('div', {
