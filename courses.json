@@ -26,13 +26,13 @@
     "booking_link": null,
     "tags": "tags",
     "status": "status",
-    "last_updated": "2025-07-28T22:00:00.000Z",
+    "last_updated": "2025-07-30T22:00:00.000Z",
     "sort_id": 2,
     "is_popular": true,
     "export_status": true,
     "weekday": "torsdag",
     "org_name": "Stockholms SBIF",
-    "org_email": "info@test.se",
+    "org_email": "info@stockholmsbif.se",
     "org_phone": "0707760429"
   },
   {
@@ -62,13 +62,13 @@
     "booking_link": null,
     "tags": "tags",
     "status": "status",
-    "last_updated": "2025-07-28T22:00:00.000Z",
+    "last_updated": "2025-07-30T22:00:00.000Z",
     "sort_id": 1,
     "is_popular": false,
     "export_status": true,
     "weekday": "fredag",
     "org_name": "Stockholms BarnidrottsföRening",
-    "org_email": "info@stockholmsbif.se",
+    "org_email": "info@wermdoparkour.se",
     "org_phone": "0707760429"
   },
   {
@@ -98,13 +98,13 @@
     "booking_link": null,
     "tags": "tags",
     "status": "status",
-    "last_updated": "2025-07-28T22:00:00.000Z",
+    "last_updated": "2025-07-30T22:00:00.000Z",
     "sort_id": 3,
     "is_popular": false,
     "export_status": true,
     "weekday": "fredag",
     "org_name": "Stockholms BarnidrottsföRening",
-    "org_email": "info@stockholmsbif.se",
+    "org_email": "info@wermdoparkour.se",
     "org_phone": "0707760429"
   },
   {
@@ -134,13 +134,13 @@
     "booking_link": null,
     "tags": "tags",
     "status": "status",
-    "last_updated": "2025-07-28T22:00:00.000Z",
+    "last_updated": "2025-07-30T22:00:00.000Z",
     "sort_id": 4,
     "is_popular": true,
     "export_status": true,
     "weekday": "fredag",
     "org_name": "SBIF",
-    "org_email": "bijan.zarrasvand@gmail.com",
+    "org_email": "kontakt@stockholmsbif.se",
     "org_phone": "0707760429"
   }
 ]
