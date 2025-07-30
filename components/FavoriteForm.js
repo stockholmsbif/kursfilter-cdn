@@ -7,13 +7,20 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
   const maxLength = 300;
 
   const handleClick = () => {
-    if (!isValid || !onSubmit) return;
+    console.log('🔍 Klick på SKICKA INTRESSE!');
+
+    if (!isValid || !onSubmit) {
+      console.warn('Validering misslyckades eller onSubmit saknas');
+      return;
+    }
 
     const payload = {
       contactInfo,
       favorites,
       token: CONTACT_API_TOKEN
     };
+
+    console.log('📦 Skickar payload:', payload);
 
     fetch(CONTACT_API_URL, {
       method: 'POST',
@@ -22,15 +29,14 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
     })
       .then(res => res.text())
       .then(resText => {
-        console.log('Svar från servern:', resText);
+        console.log('✅ Svar från servern:', resText);
         alert('Ditt intresse har skickats till arrangörerna!');
+        onSubmit();
       })
       .catch(err => {
-        console.error('Fel vid skick:', err);
+        console.error('❌ Fel vid skick:', err);
         alert('Något gick fel. Försök igen senare.');
       });
-
-    onSubmit();
   };
 
   return e('div', {
