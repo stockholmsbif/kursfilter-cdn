@@ -132,7 +132,7 @@ export function CourseBrowserApp() {
 
     e('h2', null, 'Tillgängliga kurser'),
     filtered.map(course =>
-      e('div', { style: { position: 'relative' } },
+      e('div', { key: course.course_id, style: { position: 'relative' } },
         e('span', {
           onClick: () => toggleFavorite(course.course_id),
           style: {
@@ -146,7 +146,7 @@ export function CourseBrowserApp() {
           },
           title: favorites.includes(course.course_id) ? 'Ta bort favorit' : 'Markera som favorit'
         }, favorites.includes(course.course_id) ? '❤' : '♡'),
-        e(CourseCard, { key: course.course_id, course })
+        e(CourseCard, { course })
       )
     )
   );
