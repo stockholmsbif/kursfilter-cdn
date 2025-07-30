@@ -1,4 +1,4 @@
-// Goole Form v1.0
+// Goole Form v1.1
 import { CONTACT_API_TOKEN } from '../config.js';
 
 export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
@@ -18,10 +18,23 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
     const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSdMt7Hp0M-aJ2qxijAu90Anr37LrG7_2sEEcEJByQaIMB1Rdg/formResponse';
     const formData = new FormData();
 
+    // Komprimerade course_id
+    const compactCourses = favorites.map(({ course_id }) => course_id);
+
+    // Kursdata för e-post
+    const emailCourses = favorites.map(({ course_name, location_name, org_name, org_email, org_phone }) => ({
+      course_name,
+      location_name,
+      org_name,
+      org_email,
+      org_phone
+    }));
+
     formData.append('entry.1262126199', contactInfo.name); // Namn
     formData.append('entry.1510975441', contactInfo.email); // E-post
     formData.append('entry.1217617098', contactInfo.message || ''); // Meddelande
-    formData.append('entry.38982473', JSON.stringify(favorites)); // Kurser (JSON)
+    formData.append('entry.38982473', JSON.stringify(emailCourses)); // Kurser (detaljerad)
+    formData.append('entry.1944554327', JSON.stringify(compactCourses)); // Endast course_id
 
     fetch(formUrl, {
       method: 'POST',
@@ -103,3 +116,4 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
     }, 'Skicka intresse')
   );
 }
+
