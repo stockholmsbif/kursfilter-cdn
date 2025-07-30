@@ -1,4 +1,5 @@
-import { CONTACT_API_URL, CONTACT_API_TOKEN } from '../config.js';
+// Goole Form v1.0
+import { CONTACT_API_TOKEN } from '../config.js';
 
 export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
   const e = React.createElement;
@@ -14,27 +15,26 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
       return;
     }
 
-    const payload = {
-      contactInfo,
-      favorites,
-      token: CONTACT_API_TOKEN
-    };
+    const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSdMt7Hp0M-aJ2qxijAu90Anr37LrG7_2sEEcEJByQaIMB1Rdg/formResponse';
+    const formData = new FormData();
 
-    console.log('📦 Skickar payload:', payload);
+    formData.append('entry.1262126199', contactInfo.name); // Namn
+    formData.append('entry.1510975441', contactInfo.email); // E-post
+    formData.append('entry.1217617098', contactInfo.message || ''); // Meddelande
+    formData.append('entry.38982473', JSON.stringify(favorites)); // Kurser (JSON)
 
-    fetch(CONTACT_API_URL, {
+    fetch(formUrl, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+      mode: 'no-cors',
+      body: formData
     })
-      .then(res => res.text())
-      .then(resText => {
-        console.log('✅ Svar från servern:', resText);
-        alert('Ditt intresse har skickats till arrangörerna!');
+      .then(() => {
+        console.log('✅ Formulär inskickat');
+        alert('Ditt intresse har skickats och sparats!');
         onSubmit();
       })
       .catch(err => {
-        console.error('❌ Fel vid skick:', err);
+        console.error('❌ Fel vid inskick:', err);
         alert('Något gick fel. Försök igen senare.');
       });
   };
