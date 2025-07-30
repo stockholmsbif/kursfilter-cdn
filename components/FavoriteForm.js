@@ -116,4 +116,3 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
     }, 'Skicka intresse')
   );
 }
-
