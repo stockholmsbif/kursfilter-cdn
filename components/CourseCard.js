@@ -30,8 +30,8 @@ export function CourseCard({ course }) {
     React.createElement('div', { className: 'course-content' }, [
       is_popular && React.createElement('div', { className: 'popular' }, '🔥 Populär kurs'),
       React.createElement('h3', null, course_name),
-      React.createElement('p', null, `${ageLabel} – ${weekday} – ${city}`),
-      location_name && React.createElement('p', null, `Plats: ${location_name} (${municipality})`),
+      React.createElement('p', null, `Målgrupp: Barn ${ageLabel}`),
+      location_name && React.createElement('p', null, `Plats: ${location_name} (${municipality}, ${city})`),
       React.createElement('p', null, description),
       React.createElement('p', null, `Pris: ${price} kr`),
       React.createElement('p', null, `Arrangör: ${org_name}`),
