@@ -1,3 +1,4 @@
+//Github v1.2
 import { COURSE_API_URL } from '../config.js';
 import { CourseCard } from './CourseCard.js';
 import { MultiSelectFilter } from './MultiSelectFilter.js';
