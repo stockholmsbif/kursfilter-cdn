@@ -1,4 +1,4 @@
-//CourseBrowserApp Github v1.6
+//CourseBrowserApp Github v1.7
 import { COURSE_API_URL } from '../config.js';
 import { CourseCard } from './CourseCard.js';
 import { MultiSelectFilter } from './MultiSelectFilter.js';
@@ -15,6 +15,7 @@ export function CourseBrowserApp() {
   const [searchQuery, setSearchQuery] = React.useState('');
   const [favorites, setFavorites] = React.useState([]);
   const [contactInfo, setContactInfo] = React.useState({ name: '', email: '', phone: '', message: '' });
+  const [expandedCourse, setExpandedCourse] = React.useState(null);
 
   React.useEffect(() => {
     fetch(COURSE_API_URL)
@@ -37,6 +38,10 @@ export function CourseBrowserApp() {
     );
   };
 
+  const toggleExpanded = (courseId) => {
+    setExpandedCourse(prev => (prev === courseId ? null : courseId));
+  };
+
   const handleSubmit = (action) => {
     if (action?.remove) {
       setFavorites(prev => prev.filter(id => id !== action.remove));
@@ -52,8 +57,6 @@ export function CourseBrowserApp() {
 
   const municipalities = Array.from(new Set(courses.map(c => c.municipality).filter(Boolean))).sort();
   const cities = Array.from(new Set(courses.map(c => c.city).filter(Boolean))).sort();
-  //const weekdays = Array.from(new Set(courses.map(c => c.weekday?.toLowerCase()).filter(Boolean)))
-  //  .sort((a, b) => ['måndag','tisdag','onsdag','torsdag','fredag','lördag','söndag'].indexOf(a) - ['måndag','tisdag','onsdag','torsdag','fredag','lördag','söndag'].indexOf(b));
 
   const allAges = new Set();
   courses.forEach(c => {
@@ -66,9 +69,6 @@ export function CourseBrowserApp() {
   const ageGroups = Array.from(allAges).sort((a, b) => a - b);
 
   let filtered = courses;
-  // if (weekdayFilter.length) {
-  //   filtered = filtered.filter(course => weekdayFilter.includes(course.weekday.toLowerCase()));
-  // }
   if (municipalityFilter.length) {
     filtered = filtered.filter(course => municipalityFilter.includes(course.municipality));
   }
@@ -112,13 +112,6 @@ export function CourseBrowserApp() {
       className: 'search-input'
     }),
 
-    // e(MultiSelectFilter, {
-    //   title: 'Veckodag',
-    //   options: weekdays,
-    //   selected: weekdayFilter,
-    //   onChange: setWeekdayFilter
-    // }),
-
     e(MultiSelectFilter, {
       title: 'Kommun',
       options: municipalities,
@@ -149,7 +142,12 @@ export function CourseBrowserApp() {
             ? 'select-button selected'
             : 'select-button not-selected'
         }, favorites.includes(course.course_id) ? 'Vald' : 'Välj'),
-        e(CourseCard, { course })
+
+        e(CourseCard, {
+          course,
+          expanded: expandedCourse === course.course_id,
+          onToggle: () => toggleExpanded(course.course_id)
+        })
       ])
     )
   ]);
