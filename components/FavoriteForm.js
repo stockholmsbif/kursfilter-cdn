@@ -1,4 +1,3 @@
-// Goole Form v1.2
 import { CONTACT_API_TOKEN } from '../config.js';
 
 export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
@@ -18,10 +17,8 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
     const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSdMt7Hp0M-aJ2qxijAu90Anr37LrG7_2sEEcEJByQaIMB1Rdg/formResponse';
     const formData = new FormData();
 
-    // Komprimerade course_id
     const compactCourses = favorites.map(({ course_id }) => course_id);
 
-    // Kursdata för e-post
     const emailCourses = favorites.map(({ course_name, location_name, org_name, org_email, org_phone }) => ({
       course_name,
       location_name,
@@ -30,11 +27,11 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
       org_phone
     }));
 
-    formData.append('entry.1262126199', contactInfo.name); // Namn
-    formData.append('entry.1510975441', contactInfo.email); // E-post
-    formData.append('entry.1217617098', contactInfo.message || ''); // Meddelande
-    formData.append('entry.38982473', JSON.stringify(emailCourses)); // Kurser (detaljerad)
-    formData.append('entry.1944554327', JSON.stringify(compactCourses)); // Endast course_id
+    formData.append('entry.1262126199', contactInfo.name);
+    formData.append('entry.1510975441', contactInfo.email);
+    formData.append('entry.1217617098', contactInfo.message || '');
+    formData.append('entry.38982473', JSON.stringify(emailCourses));
+    formData.append('entry.1944554327', JSON.stringify(compactCourses));
 
     fetch(formUrl, {
       method: 'POST',
@@ -52,15 +49,7 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
       });
   };
 
-  return e('div', {
-    style: {
-      marginTop: '2rem',
-      padding: '1rem',
-      background: '#f5f5f5',
-      borderRadius: '8px',
-      maxWidth: '600px'
-    }
-  },
+  return e('div', { className: 'favorite-form' },
     e('h3', null, `Du har valt ${favorites.length} kurs${favorites.length > 1 ? 'er' : ''}`),
 
     e('input', {
@@ -103,16 +92,7 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
     e('button', {
       disabled: !isValid,
       onClick: handleClick,
-      style: {
-        marginTop: '1rem',
-        padding: '0.5rem 1rem',
-        backgroundColor: isValid ? '#4A90E2' : '#ccc',
-        color: '#fff',
-        border: 'none',
-        borderRadius: '6px',
-        fontSize: '1rem',
-        cursor: isValid ? 'pointer' : 'not-allowed'
-      }
+      className: isValid ? 'select-button selected' : 'select-button not-selected'
     }, 'Skicka intresse')
   );
-}
+} 
