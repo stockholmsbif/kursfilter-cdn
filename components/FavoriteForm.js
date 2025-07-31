@@ -98,7 +98,7 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
     e('div', { className: 'form-selected-summary' },
       favorites.length > 0
         ? [
-            e('div', { className: 'form-selected-count' }, `${favorites.length} kurs${favorites.length > 1 ? 'er' : ''} valda:`),
+            e('div', { className: 'form-selected-count' }, `${favorites.length} kurs${favorites.length === 1 ? '' : 'er'} vald${favorites.length === 1 ? '' : 'a'}`),
             e('ul', { className: 'form-selected-courses' }, favorites.map((f, i) =>
               e('li', { key: i }, [
                 e('button', {
@@ -123,4 +123,3 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
     submitted && e('div', { className: 'form-confirmation' }, '✅ Ditt intresse har skickats till valda kursarrangörer.')
   ]);
 }
-
