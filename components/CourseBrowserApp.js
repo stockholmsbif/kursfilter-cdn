@@ -1,3 +1,4 @@
+//Github v1.0
 import { COURSE_API_URL } from '../config.js';
 import { CourseCard } from './CourseCard.js';
 import { MultiSelectFilter } from './MultiSelectFilter.js';
@@ -117,7 +118,7 @@ export function CourseBrowserApp() {
     }),
 
     e(MultiSelectFilter, {
-      title: 'Åldersgrupp',
+      title: 'Aldersgrupp',
       options: ageGroups,
       selected: ageGroupFilter,
       onChange: setAgeGroupFilter
@@ -132,22 +133,24 @@ export function CourseBrowserApp() {
 
     e('h2', null, 'Tillgängliga kurser'),
     filtered.map(course =>
-      e('div', { key: course.course_id, style: { position: 'relative' } },
-        e('span', {
+      e('div', { key: course.course_id, style: { position: 'relative' } }, [
+        e('button', {
           onClick: () => toggleFavorite(course.course_id),
           style: {
             position: 'absolute',
             top: '0',
             right: '0',
-            cursor: 'pointer',
-            fontSize: '1.5rem',
-            color: favorites.includes(course.course_id) ? '#d40000' : '#ccc',
-            padding: '0.5rem'
-          },
-          title: favorites.includes(course.course_id) ? 'Ta bort favorit' : 'Markera som favorit'
-        }, favorites.includes(course.course_id) ? '❤' : '♡'),
+            margin: '0.5rem',
+            padding: '0.5rem 1rem',
+            backgroundColor: favorites.includes(course.course_id) ? '#4CAF50' : '#f0f0f0',
+            color: favorites.includes(course.course_id) ? 'white' : 'black',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }
+        }, favorites.includes(course.course_id) ? 'Vald' : 'Välj'),
         e(CourseCard, { course })
-      )
+      ])
     )
   );
 }
