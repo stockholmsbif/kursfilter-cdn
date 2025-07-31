@@ -1,4 +1,4 @@
-//Github v1.4
+//Github v1.5
 import { CONTACT_API_TOKEN } from '../config.js';
 
 export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
@@ -52,6 +52,8 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
 
     e('input', {
       type: 'text',
+      name: 'name',
+      autoComplete: 'name',
       placeholder: 'Ditt namn',
       value: contactInfo.name,
       onChange: (ev) => onChange({ ...contactInfo, name: ev.target.value }),
@@ -60,6 +62,8 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
 
     e('input', {
       type: 'email',
+      name: 'email',
+      autoComplete: 'email',
       placeholder: 'Din e-postadress',
       value: contactInfo.email,
       onChange: (ev) => onChange({ ...contactInfo, email: ev.target.value }),
@@ -68,6 +72,8 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
 
     e('input', {
       type: 'tel',
+      name: 'phone',
+      autoComplete: 'tel',
       placeholder: 'Telefonnummer (valfritt)',
       value: contactInfo.phone,
       onChange: (ev) => onChange({ ...contactInfo, phone: ev.target.value }),
@@ -84,6 +90,15 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
     }),
 
     e('div', { className: 'form-length-info' }, `${(contactInfo.message || '').length} / ${maxLength}`),
+
+    e('div', { className: 'form-selected-summary' },
+      favorites.length > 0
+        ? [
+            e('div', { className: 'form-selected-count' }, `${favorites.length} kurs${favorites.length > 1 ? 'er' : ''} valda:`),
+            e('ul', { className: 'form-selected-courses' }, favorites.map((f, i) => e('li', { key: i }, f.course_name)))
+          ]
+        : e('div', { className: 'form-selected-courses-empty' }, 'Inga kurser valda ännu.')
+    ),
 
     e('button', {
       disabled: !isValid || favorites.length === 0,
