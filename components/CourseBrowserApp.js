@@ -1,4 +1,4 @@
-//Github v1.2
+//Github v1.3
 import { COURSE_API_URL } from '../config.js';
 import { CourseCard } from './CourseCard.js';
 import { MultiSelectFilter } from './MultiSelectFilter.js';
@@ -84,6 +84,13 @@ export function CourseBrowserApp() {
   if (loading) return e('p', null, 'Laddar...');
 
   return e('div', { id: 'course-browser' }, [
+    e(FavoriteForm, {
+      favorites: courses.filter(c => favorites.includes(c.course_id)),
+      contactInfo,
+      onChange: setContactInfo,
+      onSubmit: handleSubmit
+    }),
+
     e('h2', null, 'Filtrera kurser'),
 
     e('input', {
@@ -113,13 +120,6 @@ export function CourseBrowserApp() {
       options: ageGroups,
       selected: ageGroupFilter,
       onChange: setAgeGroupFilter
-    }),
-
-    favorites.length > 0 && e(FavoriteForm, {
-      favorites: courses.filter(c => favorites.includes(c.course_id)),
-      contactInfo,
-      onChange: setContactInfo,
-      onSubmit: handleSubmit
     }),
 
     e('h2', null, 'Tillgängliga kurser'),
