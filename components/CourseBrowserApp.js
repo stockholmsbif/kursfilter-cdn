@@ -1,4 +1,4 @@
-//CourseBrowserApp Github v1.4
+//CourseBrowserApp Github v1.5
 import { COURSE_API_URL } from '../config.js';
 import { CourseCard } from './CourseCard.js';
 import { MultiSelectFilter } from './MultiSelectFilter.js';
@@ -52,13 +52,17 @@ export function CourseBrowserApp() {
   const municipalities = Array.from(new Set(courses.map(c => c.municipality).filter(Boolean))).sort();
   const weekdays = Array.from(new Set(courses.map(c => c.weekday?.toLowerCase()).filter(Boolean)))
     .sort((a, b) => ['måndag','tisdag','onsdag','torsdag','fredag','lördag','söndag'].indexOf(a) - ['måndag','tisdag','onsdag','torsdag','fredag','lördag','söndag'].indexOf(b));
-  const ageGroups = Array.from(new Set(
-    courses.map(c => {
-      const from = currentYear - c.birth_year_to;
-      const to = currentYear - c.birth_year_from;
-      return `${from}–${to} år`;
-    })
-  )).sort((a, b) => parseInt(a) - parseInt(b));
+
+  // Skapa en lista med alla individuella åldrar från kursernas intervall
+  const allAges = new Set();
+  courses.forEach(c => {
+    const from = currentYear - c.birth_year_to;
+    const to = currentYear - c.birth_year_from;
+    for (let age = from; age <= to; age++) {
+      allAges.add(age);
+    }
+  });
+  const ageGroups = Array.from(allAges).sort((a, b) => a - b);
 
   let filtered = courses;
   if (weekdayFilter.length) {
@@ -69,8 +73,9 @@ export function CourseBrowserApp() {
   }
   if (ageGroupFilter.length) {
     filtered = filtered.filter(course => {
-      const ageLabel = `${currentYear - course.birth_year_to}–${currentYear - course.birth_year_from} år`;
-      return ageGroupFilter.includes(ageLabel);
+      const from = currentYear - course.birth_year_to;
+      const to = currentYear - course.birth_year_from;
+      return ageGroupFilter.some(age => age >= from && age <= to);
     });
   }
   if (searchQuery.trim()) {
@@ -118,7 +123,7 @@ export function CourseBrowserApp() {
     }),
 
     e(MultiSelectFilter, {
-      title: 'Åldersgrupp',
+      title: 'Barnets ålder',
       options: ageGroups,
       selected: ageGroupFilter,
       onChange: setAgeGroupFilter
@@ -138,3 +143,4 @@ export function CourseBrowserApp() {
     )
   ]);
 }
+
