@@ -1,3 +1,4 @@
+//Github v1.0
 export function CourseCard({ course }) {
   const {
     course_name,
@@ -20,12 +21,12 @@ export function CourseCard({ course }) {
   const ageLabel = `${ageFrom}–${ageTo} år`;
 
   return React.createElement('div', { className: 'course-card' }, [
-    React.createElement('div', { className: 'course-checkbox' }, [
-      React.createElement('input', {
-        type: 'checkbox',
-        id: `select-${course.course_id}`
-      }),
-    ]),
+    // React.createElement('div', { className: 'course-checkbox' }, [
+    //   React.createElement('input', {
+    //     type: 'checkbox',
+    //     id: `select-${course.course_id}`
+    //   }),
+    // ]),
     React.createElement('div', { className: 'course-content' }, [
       is_popular && React.createElement('div', { className: 'popular' }, '🔥 Populär kurs'),
       React.createElement('h3', null, course_name),
