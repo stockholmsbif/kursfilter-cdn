@@ -36,7 +36,7 @@ export function CourseCard({ course, expanded, onToggle }) {
       React.createElement('button', {
         onClick: onToggle,
         className: 'course-toggle'
-      }, expanded ? 'Visa mindre' : 'Visa mer'),
+      }, expanded ? 'Visa mindre' : 'Visa mer   '),
       expanded && description && React.createElement('div', {
         className: 'course-description',
         dangerouslySetInnerHTML: { __html: description }
