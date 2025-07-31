@@ -1,4 +1,4 @@
-//FavoriteForm.js Github v1.8
+//FavoriteForm.js Github v1.9
 import { CONTACT_API_TOKEN } from '../config.js';
 
 export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
@@ -77,7 +77,7 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
     e('input', {
       type: 'tel',
       name: 'phone',
-      autoComplete: 'tel',
+      autoComplete: 'mobile',
       placeholder: 'Telefonnummer (valfritt)',
       value: contactInfo.phone,
       onChange: (ev) => onChange({ ...contactInfo, phone: ev.target.value }),
