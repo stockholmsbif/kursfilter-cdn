@@ -1,4 +1,5 @@
 //FavoriteForm.js Github v1.7
+//FavoriteForm.js Github v1.5
 import { CONTACT_API_TOKEN } from '../config.js';
 
 export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
@@ -45,6 +46,10 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
         console.error('❌ Fel vid inskick:', err);
         alert('Något gick fel. Försök igen senare.');
       });
+  };
+
+  const handleRemove = (courseId) => {
+    onSubmit({ remove: courseId });
   };
 
   return e('div', { className: 'favorite-form-wrapper' }, [
@@ -95,7 +100,17 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
       favorites.length > 0
         ? [
             e('div', { className: 'form-selected-count' }, `${favorites.length} kurs${favorites.length > 1 ? 'er' : ''} valda:`),
-            e('ul', { className: 'form-selected-courses' }, favorites.map((f, i) => e('li', { key: i }, f.course_name)))
+            e('ul', { className: 'form-selected-courses' }, favorites.map((f, i) =>
+              e('li', { key: i }, [
+                f.course_name,
+                e('button', {
+                  type: 'button',
+                  className: 'form-remove-button',
+                  title: 'Ta bort',
+                  onClick: () => handleRemove(f.course_id)
+                }, '🗑️')
+              ])
+            ))
           ]
         : e('div', { className: 'form-selected-courses-empty' }, 'Inga kurser valda ännu.')
     ),
@@ -109,3 +124,4 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
     submitted && e('div', { className: 'form-confirmation' }, '✅ Ditt intresse har skickats till valda kursarrangörer.')
   ]);
 }
+
