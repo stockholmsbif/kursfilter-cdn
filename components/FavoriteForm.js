@@ -1,15 +1,13 @@
-//Github v1.3
+//Github v1.4
 import { CONTACT_API_TOKEN } from '../config.js';
 
 export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
   const e = React.createElement;
-
+  const [submitted, setSubmitted] = React.useState(false);
   const isValid = contactInfo.name.trim() && contactInfo.email.trim();
   const maxLength = 300;
 
   const handleClick = () => {
-    console.log('🔍 Klick på SKICKA INTRESSE!');
-
     if (!isValid || !onSubmit) {
       console.warn('Validering misslyckades eller onSubmit saknas');
       return;
@@ -19,7 +17,6 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
     const formData = new FormData();
 
     const compactCourses = favorites.map(({ course_id }) => course_id);
-
     const emailCourses = favorites.map(({ course_name, location_name, org_name, org_email, org_phone }) => ({
       course_name,
       location_name,
@@ -40,9 +37,9 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
       body: formData
     })
       .then(() => {
-        console.log('✅ Formulär inskickat');
-        alert('Ditt intresse har skickats och sparats!');
+        setSubmitted(true);
         onSubmit();
+        setTimeout(() => setSubmitted(false), 4000);
       })
       .catch(err => {
         console.error('❌ Fel vid inskick:', err);
@@ -50,15 +47,15 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
       });
   };
 
-  return e('div', { className: 'favorite-form' },
-    e('h3', null, `Du har valt ${favorites.length} kurs${favorites.length > 1 ? 'er' : ''}`),
+  return e('div', { className: 'favorite-form-wrapper' }, [
+    e('h3', null, 'Fyll i dina uppgifter här och välj sedan kurser du vill skicka intresseanmälningar till.'),
 
     e('input', {
       type: 'text',
       placeholder: 'Ditt namn',
       value: contactInfo.name,
       onChange: (ev) => onChange({ ...contactInfo, name: ev.target.value }),
-      style: { margin: '0.5rem 0', padding: '0.5rem', width: '100%' }
+      className: 'form-input'
     }),
 
     e('input', {
@@ -66,7 +63,7 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
       placeholder: 'Din e-postadress',
       value: contactInfo.email,
       onChange: (ev) => onChange({ ...contactInfo, email: ev.target.value }),
-      style: { margin: '0.5rem 0', padding: '0.5rem', width: '100%' }
+      className: 'form-input'
     }),
 
     e('input', {
@@ -74,7 +71,7 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
       placeholder: 'Telefonnummer (valfritt)',
       value: contactInfo.phone,
       onChange: (ev) => onChange({ ...contactInfo, phone: ev.target.value }),
-      style: { margin: '0.5rem 0', padding: '0.5rem', width: '100%' }
+      className: 'form-input'
     }),
 
     e('textarea', {
@@ -83,17 +80,18 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
       value: contactInfo.message || '',
       onChange: (ev) => onChange({ ...contactInfo, message: ev.target.value }),
       rows: 4,
-      style: { margin: '0.5rem 0', padding: '0.5rem', width: '100%', resize: 'vertical' }
+      className: 'form-textarea'
     }),
 
-    e('div', {
-      style: { fontSize: '0.85rem', textAlign: 'right', color: '#666' }
-    }, `${(contactInfo.message || '').length} / ${maxLength}`),
+    e('div', { className: 'form-length-info' }, `${(contactInfo.message || '').length} / ${maxLength}`),
 
     e('button', {
-      disabled: !isValid,
+      disabled: !isValid || favorites.length === 0,
       onClick: handleClick,
-      className: isValid ? 'select-button selected' : 'select-button not-selected'
-    }, 'Skicka intresse')
-  );
-} 
+      className: `${isValid && favorites.length > 0 ? 'form-button-ready' : 'form-button-disabled'} ${submitted ? 'form-button-submitted' : ''}`
+    }, submitted ? 'Skickat!' : 'Skicka intresse'),
+
+    submitted && e('div', { className: 'form-confirmation' }, '✅ Ditt intresse har skickats till valda kursarrangörer.')
+  ]);
+}
+
