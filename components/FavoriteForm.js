@@ -1,4 +1,4 @@
-//Github v1.0
+//Github v1.3
 import { CONTACT_API_TOKEN } from '../config.js';
 
 export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
