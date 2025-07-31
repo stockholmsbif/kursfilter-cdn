@@ -102,13 +102,13 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
             e('div', { className: 'form-selected-count' }, `${favorites.length} kurs${favorites.length > 1 ? 'er' : ''} valda:`),
             e('ul', { className: 'form-selected-courses' }, favorites.map((f, i) =>
               e('li', { key: i }, [
-                f.course_name,
                 e('button', {
                   type: 'button',
                   className: 'form-remove-button',
                   title: 'Ta bort',
                   onClick: () => handleRemove(f.course_id)
                 }, '🗑️')
+                f.course_name,
               ])
             ))
           ]
