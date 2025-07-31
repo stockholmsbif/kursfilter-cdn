@@ -1,4 +1,4 @@
-//Github v1.3
+//CourseBrowserApp Github v1.4
 import { COURSE_API_URL } from '../config.js';
 import { CourseCard } from './CourseCard.js';
 import { MultiSelectFilter } from './MultiSelectFilter.js';
@@ -36,7 +36,11 @@ export function CourseBrowserApp() {
     );
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (action) => {
+    if (action?.remove) {
+      setFavorites(prev => prev.filter(id => id !== action.remove));
+      return;
+    }
     console.log('Formulär skickat med:', {
       contactInfo,
       selectedCourses: courses.filter(c => favorites.includes(c.course_id))
@@ -46,10 +50,8 @@ export function CourseBrowserApp() {
   const currentYear = new Date().getFullYear();
 
   const municipalities = Array.from(new Set(courses.map(c => c.municipality).filter(Boolean))).sort();
-
   const weekdays = Array.from(new Set(courses.map(c => c.weekday?.toLowerCase()).filter(Boolean)))
     .sort((a, b) => ['måndag','tisdag','onsdag','torsdag','fredag','lördag','söndag'].indexOf(a) - ['måndag','tisdag','onsdag','torsdag','fredag','lördag','söndag'].indexOf(b));
-
   const ageGroups = Array.from(new Set(
     courses.map(c => {
       const from = currentYear - c.birth_year_to;
