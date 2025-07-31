@@ -1,4 +1,4 @@
-//CourseCard.js Github v1.1
+//CourseCard.js Github v1.2
 export function CourseCard({ course, expanded, onToggle }) {
   const {
     course_name,
@@ -28,6 +28,11 @@ export function CourseCard({ course, expanded, onToggle }) {
       location_name && React.createElement('p', null, `Plats: ${location_name} (${municipality}, ${city})`),
       React.createElement('p', null, `Pris: ${price} kr`),
       React.createElement('p', null, `Arrangör: ${org_name}`),
+      booking_link && React.createElement('a', {
+        href: booking_link,
+        target: '_blank',
+        className: 'booking-link'
+      }, 'Boka här'),
       React.createElement('button', {
         onClick: onToggle,
         className: 'course-toggle'
@@ -35,12 +40,7 @@ export function CourseCard({ course, expanded, onToggle }) {
       expanded && description && React.createElement('div', {
         className: 'course-description',
         dangerouslySetInnerHTML: { __html: description }
-      }),
-      booking_link && React.createElement('a', {
-        href: booking_link,
-        target: '_blank',
-        className: 'booking-link'
-      }, 'Boka här')
+      })
     ])
   ]);
 }
