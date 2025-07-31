@@ -106,8 +106,8 @@ export function FavoriteForm({ favorites, contactInfo, onChange, onSubmit }) {
                   className: 'form-remove-button',
                   title: 'Ta bort',
                   onClick: () => handleRemove(f.course_id)
-                }, '🗑️')
-                f.course_name,
+                }, '🗑️'),
+                f.course_name
               ])
             ))
           ]
