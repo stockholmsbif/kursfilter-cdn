@@ -1,4 +1,3 @@
-//Github v1.0
 import { COURSE_API_URL } from '../config.js';
 import { CourseCard } from './CourseCard.js';
 import { MultiSelectFilter } from './MultiSelectFilter.js';
@@ -19,7 +18,6 @@ export function CourseBrowserApp() {
     fetch(COURSE_API_URL)
       .then(res => res.json())
       .then(data => {
-        console.log('Kurser hämtade:', data);
         setCourses(data);
         setLoading(false);
       })
@@ -38,7 +36,7 @@ export function CourseBrowserApp() {
   };
 
   const handleSubmit = () => {
-    console.log('📨 Formulär skickat med:', {
+    console.log('Formulär skickat med:', {
       contactInfo,
       selectedCourses: courses.filter(c => favorites.includes(c.course_id))
     });
@@ -84,7 +82,7 @@ export function CourseBrowserApp() {
 
   if (loading) return e('p', null, 'Laddar...');
 
-  return e('div', null,
+  return e('div', { id: 'course-browser' }, [
     e('h2', null, 'Filtrera kurser'),
 
     e('input', {
@@ -92,15 +90,7 @@ export function CourseBrowserApp() {
       placeholder: 'Sök t.ex. bamsegympa, hall eller arrangör',
       value: searchQuery,
       onChange: (ev) => setSearchQuery(ev.target.value),
-      style: {
-        padding: '0.5rem',
-        fontSize: '1rem',
-        marginBottom: '1rem',
-        width: '100%',
-        maxWidth: '500px',
-        border: '1px solid #ccc',
-        borderRadius: '8px'
-      }
+      className: 'search-input'
     }),
 
     e(MultiSelectFilter, {
@@ -118,7 +108,7 @@ export function CourseBrowserApp() {
     }),
 
     e(MultiSelectFilter, {
-      title: 'Aldersgrupp',
+      title: 'Åldersgrupp',
       options: ageGroups,
       selected: ageGroupFilter,
       onChange: setAgeGroupFilter
@@ -133,24 +123,15 @@ export function CourseBrowserApp() {
 
     e('h2', null, 'Tillgängliga kurser'),
     filtered.map(course =>
-      e('div', { key: course.course_id, style: { position: 'relative' } }, [
+      e('div', { key: course.course_id, className: 'course-wrapper' }, [
         e('button', {
           onClick: () => toggleFavorite(course.course_id),
-          style: {
-            position: 'absolute',
-            top: '0',
-            right: '0',
-            margin: '0.5rem',
-            padding: '0.5rem 1rem',
-            backgroundColor: favorites.includes(course.course_id) ? '#4CAF50' : '#f0f0f0',
-            color: favorites.includes(course.course_id) ? 'white' : 'black',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer'
-          }
+          className: favorites.includes(course.course_id)
+            ? 'select-button selected'
+            : 'select-button not-selected'
         }, favorites.includes(course.course_id) ? 'Vald' : 'Välj'),
         e(CourseCard, { course })
       ])
     )
-  );
+  ]);
 }
