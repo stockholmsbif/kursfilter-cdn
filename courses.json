@@ -23,7 +23,7 @@
     "address": "min adress",
     "postal_code": 12212,
     "city": "Snättringe",
-    "booking_link": null,
+    "booking_link": "https://boka.stockholmsbif.se/",
     "tags": "tags",
     "status": "status",
     "last_updated": "2025-07-30T22:00:00.000Z",
