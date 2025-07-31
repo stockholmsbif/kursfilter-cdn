@@ -1,4 +1,4 @@
-//CourseBrowserApp Github v1.5
+//CourseBrowserApp Github v1.6
 import { COURSE_API_URL } from '../config.js';
 import { CourseCard } from './CourseCard.js';
 import { MultiSelectFilter } from './MultiSelectFilter.js';
@@ -8,8 +8,9 @@ export function CourseBrowserApp() {
   const e = React.createElement;
   const [courses, setCourses] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
-  const [weekdayFilter, setWeekdayFilter] = React.useState([]);
+  const [weekdayFilter, setWeekdayFilter] = React.useState([]); // ← används inte, men kvar för eventuell framtida användning
   const [municipalityFilter, setMunicipalityFilter] = React.useState([]);
+  const [cityFilter, setCityFilter] = React.useState([]);
   const [ageGroupFilter, setAgeGroupFilter] = React.useState([]);
   const [searchQuery, setSearchQuery] = React.useState('');
   const [favorites, setFavorites] = React.useState([]);
@@ -50,10 +51,10 @@ export function CourseBrowserApp() {
   const currentYear = new Date().getFullYear();
 
   const municipalities = Array.from(new Set(courses.map(c => c.municipality).filter(Boolean))).sort();
-  const weekdays = Array.from(new Set(courses.map(c => c.weekday?.toLowerCase()).filter(Boolean)))
-    .sort((a, b) => ['måndag','tisdag','onsdag','torsdag','fredag','lördag','söndag'].indexOf(a) - ['måndag','tisdag','onsdag','torsdag','fredag','lördag','söndag'].indexOf(b));
+  const cities = Array.from(new Set(courses.map(c => c.city).filter(Boolean))).sort();
+  //const weekdays = Array.from(new Set(courses.map(c => c.weekday?.toLowerCase()).filter(Boolean)))
+  //  .sort((a, b) => ['måndag','tisdag','onsdag','torsdag','fredag','lördag','söndag'].indexOf(a) - ['måndag','tisdag','onsdag','torsdag','fredag','lördag','söndag'].indexOf(b));
 
-  // Skapa en lista med alla individuella åldrar från kursernas intervall
   const allAges = new Set();
   courses.forEach(c => {
     const from = currentYear - c.birth_year_to;
@@ -65,11 +66,14 @@ export function CourseBrowserApp() {
   const ageGroups = Array.from(allAges).sort((a, b) => a - b);
 
   let filtered = courses;
-  if (weekdayFilter.length) {
-    filtered = filtered.filter(course => weekdayFilter.includes(course.weekday.toLowerCase()));
-  }
+  // if (weekdayFilter.length) {
+  //   filtered = filtered.filter(course => weekdayFilter.includes(course.weekday.toLowerCase()));
+  // }
   if (municipalityFilter.length) {
     filtered = filtered.filter(course => municipalityFilter.includes(course.municipality));
+  }
+  if (cityFilter.length) {
+    filtered = filtered.filter(course => cityFilter.includes(course.city));
   }
   if (ageGroupFilter.length) {
     filtered = filtered.filter(course => {
@@ -108,18 +112,25 @@ export function CourseBrowserApp() {
       className: 'search-input'
     }),
 
-    e(MultiSelectFilter, {
-      title: 'Veckodag',
-      options: weekdays,
-      selected: weekdayFilter,
-      onChange: setWeekdayFilter
-    }),
+    // e(MultiSelectFilter, {
+    //   title: 'Veckodag',
+    //   options: weekdays,
+    //   selected: weekdayFilter,
+    //   onChange: setWeekdayFilter
+    // }),
 
     e(MultiSelectFilter, {
       title: 'Kommun',
       options: municipalities,
       selected: municipalityFilter,
       onChange: setMunicipalityFilter
+    }),
+
+    e(MultiSelectFilter, {
+      title: 'Ort',
+      options: cities,
+      selected: cityFilter,
+      onChange: setCityFilter
     }),
 
     e(MultiSelectFilter, {
@@ -143,4 +154,3 @@ export function CourseBrowserApp() {
     )
   ]);
 }
-
