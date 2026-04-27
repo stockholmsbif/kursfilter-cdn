@@ -1,0 +1,300 @@
+function onFormSubmitUniversal() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  // Konfigurerbara fliknamn och deras respektive hanteringsfunktioner
+  const formSheets = [
+    { sheetName: "FormOrganizers", handler: handleNewOrganizerRow },
+    { sheetName: "FormCourses", handler: handleNewCourseRow }
+  ];
+
+  formSheets.forEach(config => {
+    const sheet = ss.getSheetByName(config.sheetName);
+    if (!sheet) return;
+
+    const data = sheet.getDataRange().getValues();
+    const headers = data[0];
+    const processedColIndex = headers.indexOf("processed");
+
+    // Om kolumnen inte finns, skapa den
+    if (processedColIndex === -1) {
+      sheet.getRange(1, headers.length + 1).setValue("processed");
+    }
+
+    const updatedColIndex = headers.indexOf("processed") > -1
+      ? headers.indexOf("processed")
+      : headers.length;
+
+    for (let row = 1; row < data.length; row++) {
+      const rowData = data[row];
+      const alreadyProcessed = rowData[updatedColIndex];
+
+      if (!alreadyProcessed || alreadyProcessed.toString().toLowerCase() !== "true") {
+        const namedValues = {};
+        headers.forEach((key, colIndex) => {
+          namedValues[key] = [rowData[colIndex]];
+        });
+
+        // Anropa rätt handler-funktion med "fake" e-objekt
+        const fakeEvent = { namedValues };
+        config.handler(fakeEvent);
+
+        // Markera som processad
+        sheet.getRange(row + 1, updatedColIndex + 1).setValue("TRUE");
+      }
+    }
+  });
+}
+
+
+function handleNewOrganizerRow(e) {
+  processNewOrganizerForm(e);
+  sendPendingOrganizerConfirmation(e.namedValues);
+
+}
+
+function handleNewCourseRow(e) {
+  processNewCourseForm(e);
+}
+
+function processNewOrganizerForm(e) {
+  const sheetOrganizers = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("organizers");
+
+  const fieldMap = {
+    "Ditt namn": "org_contact_person",
+    "Namn på organisation": "org_name",
+    "E-postadress": "org_email",
+    "Telefonnummer": "org_phone",
+    "Gatuadress": "org_address",
+    "Ort": "org_city",
+    "Postnummer": "org_zip",
+    "Logotypens URL": "org_logo_url",
+    "Beskrivning": "org_description"
+  };
+
+  const properFields = ["org_name", "org_address", "org_city"];
+  const phoneField = "org_phone";
+
+  const formResponse = e.namedValues; // { rubrik: [värde] }
+
+  // Skapa ny tom rad enligt ordningen i 'organizers'
+  const organizersHeaders = sheetOrganizers.getRange(1, 1, 1, sheetOrganizers.getLastColumn()).getValues()[0];
+
+  const newRow = [];
+
+  // Första fältet: org_id (genereras)
+  const baseId = formResponse["Namn på organisation"][0].toUpperCase().replace(/[^A-Z0-9]/g, "").substring(0, 6);
+  const idDate = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "yyyyMMdd");
+  const randomNum = Math.floor(Math.random() * 9000 + 1000); // fyrsiffrig slump
+  const organizerId = `${baseId}-${idDate}-${randomNum}`;
+  newRow.push(organizerId);
+
+  // Lägg till resterande fält enligt headerordning
+  for (let i = 1; i < organizersHeaders.length; i++) {
+    const header = organizersHeaders[i];
+    const formField = getKeyByValue(fieldMap, header);
+
+    if (formField && formResponse[formField]) {
+      let value = cleanString(formResponse[formField][0]);
+
+      if (properFields.includes(header)) {
+        value = toProperCase(value);
+      }
+
+      if (header === phoneField) {
+        value = formatPhone(value);
+      }
+
+      newRow.push(value);
+    } else {
+      newRow.push(""); // tomt fält om inget matchas
+    }
+  }
+
+  sheetOrganizers.appendRow(newRow);
+}
+
+function sendOrganizerApprovals() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("organizers");
+  const data = sheet.getDataRange().getValues();
+  const headers = data[0];
+
+  const approvedCol = headers.indexOf("approved");
+  let confirmationCol = headers.indexOf("confirmation_sent");
+
+  // Skapa kolumnen om den inte finns
+  if (confirmationCol === -1) {
+    confirmationCol = headers.length;
+    sheet.getRange(1, confirmationCol + 1).setValue("confirmation_sent");
+  }
+
+  for (let row = 1; row < data.length; row++) {
+    const rowData = data[row];
+    const approved = rowData[approvedCol];
+    const confirmationSent = rowData[confirmationCol];
+
+    if (approved === true && confirmationSent !== true) {
+      const organizerId = rowData[0]; // course_id på första kolumnen
+      const contactPerson = rowData[headers.indexOf("org_contact_person")];
+      const email = rowData[headers.indexOf("org_email")];
+
+      sendOrganizerApprovedEmail(contactPerson, email, organizerId);
+
+      sheet.getRange(row + 1, confirmationCol + 1).setValue(true);
+    }
+  }
+}
+
+
+function processNewCourseForm(e) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheetCourses = ss.getSheetByName("courses");
+  const sheetOrganizers = ss.getSheetByName("organizers");
+
+  const fieldMap = {
+    "Organizer ID": "org_id",
+    "Verksamhet": "activity_type",
+    "Kursnamn": "course_name",
+    "Startdatum": "start_date",
+    "Synligt från": "visible_from",
+    "Synligt till": "visible_until",
+    "Födelseår från": "birth_year_from",
+    "Födelseår till": "birth_year_to",
+    "Pris": "price",
+    "Alternativ": "options",
+    "Region": "region",
+    "Kommun": "municipality",
+    "Kurslokal": "location_name",
+    "Lokalens adress": "address",
+    "Lokalens postnummer": "postal_code",
+    "Ort": "city",
+    "Kursbeskrivning": "description"
+  };
+
+  const properFields = ["course_name", "city"];
+  const namedValues = e.namedValues;
+  const headers = sheetCourses.getRange(1, 1, 1, sheetCourses.getLastColumn()).getValues()[0];
+
+  const organizerId = cleanString(namedValues["Organizer ID"]?.[0] || "");
+  if (!organizerId) return;
+
+  const timestamp = new Date();
+  const idDate = Utilities.formatDate(timestamp, Session.getScriptTimeZone(), "yyyyMMdd");
+  const randomNum = Math.floor(Math.random() * 9000 + 1000);
+  const courseId = `${organizerId}-${idDate}-${randomNum}`;
+
+  // 🔍 Slå upp organizer info
+  const orgData = sheetOrganizers.getDataRange().getValues();
+  const orgHeaders = orgData[0];
+  const orgIndexMap = {};
+  orgHeaders.forEach((h, i) => orgIndexMap[h] = i);
+  const matchingOrg = orgData.find((row, i) => i > 0 && row[orgIndexMap["org_id"]] === organizerId);
+
+  const orgName = matchingOrg?.[orgIndexMap["org_name"]] || "";
+  const orgEmail = matchingOrg?.[orgIndexMap["org_email"]] || "";
+  const orgPhone = matchingOrg?.[orgIndexMap["org_phone"]] || "";
+
+  // 🔢 Skapa tom rad
+  const newRow = Array(headers.length).fill("");
+
+  // 🆔 course_id
+  const courseIdCol = headers.indexOf("course_id");
+  if (courseIdCol !== -1) newRow[courseIdCol] = courseId;
+
+  // 🔁 Huvudloop: lägg in data från form
+  headers.forEach((header, colIndex) => {
+    const sourceField = getKeyByValue(fieldMap, header);
+    if (!sourceField) return;
+
+    let value = namedValues[sourceField]?.[0] || "";
+
+    // Datumformat
+    if (["start_date", "visible_from", "visible_until"].includes(header)) {
+      value = formatDateYMD(value);
+    }
+
+    // Versal format för namn/ort
+    if (properFields.includes(header)) {
+      value = toProperCase(value);
+    }
+
+    newRow[colIndex] = cleanString(value);
+  });
+
+  // ➕ Arrangörsdata
+  const orgNameCol = headers.indexOf("organizer_name");
+  const orgEmailCol = headers.indexOf("organizer_email");
+  const orgPhoneCol = headers.indexOf("organizer_phone");
+
+  if (orgNameCol !== -1) newRow[orgNameCol] = orgName;
+  if (orgEmailCol !== -1) newRow[orgEmailCol] = orgEmail;
+  if (orgPhoneCol !== -1) newRow[orgPhoneCol] = orgPhone;
+
+  // ✅ Lägg till false i approved
+  const approvedCol = headers.indexOf("approved");
+  if (approvedCol !== -1) newRow[approvedCol] = false;
+
+  // 📥 Spara raden
+  sheetCourses.appendRow(newRow);
+}
+
+function formatDateYMD(value) {
+  if (!(value instanceof Date)) {
+    value = new Date(value);
+    if (isNaN(value.getTime())) return ""; // ogiltigt datum
+  }
+  return Utilities.formatDate(value, Session.getScriptTimeZone(), "yyyy-MM-dd");
+}
+
+function cleanString(str) {
+  return (str || "").toString().trim();
+}
+
+function toProperCase(str) {
+  return str
+    .toLowerCase()
+    .split(' ')
+    .map(word => {
+      if (word.length === 0) return "";
+      return word[0].toUpperCase() + word.slice(1);
+    })
+    .join(' ');
+}
+
+
+function formatPhone(str) {
+  const cleaned = cleanString(str).replace(/\s+/g, "");
+  return `'${cleaned}`; // apostrof för att bevara format
+}
+
+function getKeyByValue(obj, value) {
+  return Object.keys(obj).find(key => obj[key] === value);
+}
+
+function logToSheet(message) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Logg");
+  if (!sheet) return;
+
+  sheet.appendRow([new Date(), message]);
+}
+
+function getCourses(sheet) {
+  const [headers, ...rows] = sheet.getDataRange().getValues();
+  return rows.map(row => {
+    let obj = {};
+    headers.forEach((h, i) => obj[h] = row[i]);
+    return obj;
+  });
+}
+
+function getOrganizers(sheet) {
+  const [headers, ...rows] = sheet.getDataRange().getValues();
+  const map = {};
+  rows.forEach(row => {
+    let obj = {};
+    headers.forEach((h, i) => obj[h] = row[i]);
+    const id = obj['org_id']; // 
+    if (id) map[id] = obj;
+  });
+  return map;
+}
+

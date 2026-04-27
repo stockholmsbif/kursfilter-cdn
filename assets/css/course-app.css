@@ -1,0 +1,414 @@
+/* =======================================================
+   Plugin v1.3.1 – course-app.css
+   Uppdaterad för att samla all styling i externa klasser
+   ======================================================= */
+
+/* ====== ÖVERGRIPANDE LAYOUT ====== */
+#course-browser {
+  font-family: 'Quicksand', sans-serif;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* ====== SÖKRUTA ====== */
+.search-input {
+  padding: 0.5rem;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  width: 100%;
+  max-width: 500px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+/* ====== KURSER ====== */
+.course-wrapper {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.course-card {
+  border: 1px solid #e2e2e2;
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  padding: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.course-card h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #222;
+}
+
+.course-card p {
+  margin: 0.3rem 0;
+  font-size: 1rem;
+  color: #444;
+  line-height: 1.4;
+}
+
+.course-card .popular {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #d40000;
+  margin-bottom: 0.5rem;
+}
+
+.select-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.4rem 0.9rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-weight: 600;
+}
+
+.select-button.not-selected {
+  background-color: #4A90E2;
+  color: #f5f5f5;
+}
+
+.select-button.selected {
+  background-color: #FF6F61;
+  color: #f5f5f5;
+}
+
+/* ====== FILTER ====== */
+.weekday-filter {
+  margin-bottom: 1rem;
+}
+
+.weekday-filter select {
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+.multiselect-filter {
+  display: inline-block;
+  position: relative;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+}
+
+.multiselect-toggle {
+  padding: 0.4rem 0.8rem;
+  font-size: 1rem;
+  cursor: pointer;
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.multiselect-options {
+  position: absolute;
+  z-index: 100;
+  background: white;
+  border: 1px solid #ccc;
+  margin-top: 0.5rem;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 0.5rem;
+  min-width: 180px;
+}
+
+.multiselect-option {
+  padding: 0.3rem 0.5rem;
+  cursor: pointer;
+}
+
+.multiselect-option.selected {
+  font-weight: bold;
+  color: #007bff;
+}
+
+.multiselect-clear {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+}
+
+/* ====== FAVORITE FORMULÄR ====== */
+.favorite-form-wrapper {
+  background-color: #f9f9f9;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  margin-bottom: 2rem;
+}
+
+.favorite-form-wrapper h3 {
+  font-size: 1.0rem;
+  margin-bottom: 1rem;
+  color: #222;
+}
+
+.form-input,
+.form-textarea {
+  display: block;
+  width: 100%;
+  padding: 0.6rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-family: inherit;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-length-info {
+  text-align: right;
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+
+.form-button-ready {
+  background-color: #4A90E2;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.form-button-ready:hover {
+  background-color: #357ac8;
+}
+
+.form-button-disabled {
+  background-color: #ccc;
+  color: #eee;
+  cursor: not-allowed;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+}
+
+.form-button-submitted {
+  background-color: #3ab574 !important;
+}
+
+.form-confirmation {
+  margin-top: 1rem;
+  color: #3ab574;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+/* ====== VALDA KURSER (I FORMULÄR) ====== */
+.form-selected-summary {
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background-color: #f1f1f1;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.form-selected-count {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.form-selected-courses {
+  padding-left: 0;
+  margin: 0;
+  color: #444;
+  font-size: 0.95rem;
+}
+
+.form-selected-courses li {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+  list-style: none;
+  padding-left: 0;
+}
+
+.form-remove-button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-size: 1.0rem;
+  cursor: pointer;
+  line-height: 1;
+  color: #888;
+  transition: color 0.2s ease;
+}
+
+.form-remove-button:hover {
+  color: #FF6F61;
+}
+
+.form-remove-button:focus {
+  outline: none;
+}
+
+.form-selected-courses-empty {
+  font-style: italic;
+  color: #888;
+  padding: 0.25rem 0 0.5rem 0;
+}
+
+/* ====== GEMENSAM KNAPPSTIL ====== */
+
+/* ====== GEMENSAM KNAPPSTIL ====== */
+.course-card .booking-link,
+.course-card .course-toggle {
+  display: inline-block;
+  margin-top: 0.75rem;
+  padding: 0.4rem 0.8rem;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  border: none;
+  font-family: 'Quicksand', sans-serif;
+  cursor: pointer;
+  text-align: center;
+  line-height: 1.4;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  appearance: none;
+  min-width: 130px;
+}
+
+.course-card .course-toggle:hover,
+.course-card .booking-link:hover {
+  background-color: #0056b3;
+  text-decoration: none;
+  color: #fff;
+}
+
+.course-toggle {
+  text-transform: none;
+  margin-left: 0.5rem;
+}
+
+.course-description {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #333;
+}
+/* Utility: göm element helt när vi behöver */
+.is-hidden { display: none !important; }
+
+/* Liten badge som kan visa att filtret är låst */
+.filter-locked-note {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.8rem;
+  border-radius: 6px;
+  background: #f1f1f1;
+  color: #555;
+  border: 1px solid #ddd;
+}
+.multiselect-toggle[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.multiselect-filter {
+  position: relative;
+}
+
+.multiselect-options {
+  position: absolute;
+  top: 100%;
+  left: 0;            /* justera till right:0; om du föredrar */
+  z-index: 1000;      /* över andra kort */
+  max-height: 260px;  /* rulla vid många val */
+  overflow: auto;
+}
+
+.multiselect-option:hover {
+  background: #f7f7f7;
+}
+@media (max-width: 640px) {
+  .multiselect-filter {
+    display: block;
+    margin-right: 0;
+    width: 100%;
+  }
+  .multiselect-options {
+    min-width: 100%;
+  }
+}
+/* 🔍 Sökfält inne i dropdownen */
+.multiselect-search {
+  display: block;
+  width: 100%;
+  padding: 6px 8px;
+  margin: 4px 0 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+}
+
+.multiselect-search:focus {
+  outline: none;
+  border-color: #666;
+  background-color: #fff;
+}
+
+/* 🧭 Sektion längst ned i dropdownen (t.ex. Rensa alla) */
+.multiselect-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px solid #eee;
+}
+
+.multiselect-clear {
+  background: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.15s ease-in-out;
+}
+
+.multiselect-clear:hover:not(:disabled) {
+  background: #eee;
+}
+
+.multiselect-clear:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+@media (max-width: 640px) {
+  .multiselect-search {
+    font-size: 1rem;
+    padding: 8px;
+  }
+}

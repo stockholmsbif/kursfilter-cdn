@@ -1,0 +1,2 @@
+[course_browser municipality="Stockholm" lock="1"]
+[course_browser city="Kungsholmen" lock="1"]
