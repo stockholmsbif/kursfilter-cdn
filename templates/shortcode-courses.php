@@ -29,7 +29,7 @@ $ver = file_exists($plugin_js_file) ? filemtime($plugin_js_file) : 0;
   };
 </script>
 
-<!-- Importera vår modul via REST-URL (kringgår 403) och initiera appen test -->
+<!-- Importera vår modul via REST-URL (kringgår 403) och initiera appen -->
 <script type="module">
   import { renderCourseBrowser } from "<?php echo esc_url( rest_url('kursfilter/v1/js/course-app.js') . ($ver ? '?v='.$ver : '') ); ?>";
 
